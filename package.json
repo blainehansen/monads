@@ -1,0 +1,36 @@
+{
+  "name": "@blainehansen/monads",
+  "version": "0.1.0",
+  "description": "`Result` and `Maybe` types that allow a safe and \"functional\" way of dealing with errors and nullable values.",
+  "main": "dist/index.js",
+  "typings": "dist/index.d.ts",
+  "files": [
+  	"dist"
+  ],
+  "scripts": {
+  	"dev": "macro-ts --dev run lib/index.ts",
+  	"test": "mocha -r @blainehansen/macro-ts/register lib/**/*.test.ts",
+  	"check": "macro-ts --dev check",
+  	"build": "macro-ts build && rm -rf dist && mkdir dist && mv .macro-ts/dist/anywhere-latest/lib/* dist",
+  	"preversion": "npm test && npm run build",
+  	"postversion": "npm publish"
+  },
+  "author": {
+		"name": "Blaine Hansen",
+		"email": "faichenshing@gmail.com",
+		"url": "http://blainehansen.me/"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/blainehansen/monads.git"
+	},
+  "license": "MIT",
+  "devDependencies": {
+    "@blainehansen/macro-ts": "^0.1.1",
+    "@types/chai": "^4.2.12",
+    "@types/mocha": "^8.0.3",
+    "chai": "^4.2.0",
+    "mocha": "^8.1.1",
+    "typescript": "^4.0.2"
+  }
+}
