@@ -86,7 +86,7 @@ combineNone === None
 
 ## `ok!!` and `some!!` helper macros.
 
-This library includes two [`macro-ts`](https://github.com/blainehansen/macro-ts) helper macros that basically implements behavior equivalent to [Rust's short-circuiting question mark operator](https://doc.rust-lang.org/edition-guide/rust-2018/error-handling-and-panics/the-question-mark-operator-for-easier-error-handling.html).
+This library includes two [`macro-ts`](https://github.com/blainehansen/macro-ts) helper macros that implement behavior equivalent to [Rust's short-circuiting question mark operator](https://doc.rust-lang.org/edition-guide/rust-2018/error-handling-and-panics/the-question-mark-operator-for-easier-error-handling.html).
 
 ```ts
 function addResults(a: Result<number>, b: Result<number>) {
@@ -110,7 +110,7 @@ printDollarMaybes(Some(4.3), Some(9)) === '$4.30, $9.00'
 printDollarMaybes(Some(4.3), None, Some(9)) === None
 ```
 
-To use the macros, follow the directions to set up your project with [`macro-ts`](https://github.com/blainehansen/macro-ts), and then import and use the macros:
+To use the macros, follow the directions to set up your project with [`macro-ts`](https://github.com/blainehansen/macro-ts), and then import and include the macros:
 
 ```ts
 import { ok, some } from '@blainehansen/monads'

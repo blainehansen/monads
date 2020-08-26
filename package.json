@@ -14,7 +14,7 @@
     "check": "macro-ts --dev check",
     "build": "./build.sh",
     "preversion": "npm test && npm run build",
-    "postversion": "npm publish --access public"
+    "postversion": "git push origin master && git push origin master --tags && npm publish --access public"
   },
   "author": {
     "name": "Blaine Hansen",
