@@ -5,9 +5,9 @@ This type is a much safer and more predictable alternative to exceptions. Since 
 Since a function that could fail can choose to return a `Result` rather than throwing an exception, this creates a clear contract between the caller and the callee, and requires the caller to make some intelligent decision about how to deal with that error, rather than being surprised with an exception.
 
 ```ts
-import { Result, Ok, Err } from '@ts-std/monads'
+import { Result, Ok, Err } from '@blainehansen/monads'
 
-function require_even(n: number): Result<number> {
+function requireEven(n: number): Result<number> {
   if (n % 2 === 0)
     return Ok(n)
   else
@@ -17,86 +17,84 @@ function require_even(n: number): Result<number> {
 
 ## `Result<T, E>` instances
 
-### `is_ok(): this is Ok<T>`
+### `isOk(): this is Ok<T>`
 
 Says if the value is an `Ok`. This is a guard, so you may access the inner `T` at `value`.
 
 ```ts
-Ok(1).is_ok() === true
-Err("error").is_ok() === false
+Ok(1).isOk() === true
+Err("error").isOk() === false
 
 const ok = Ok(1)
-if (ok.is_ok()) {
+if (ok.isOk())
   const n: number = ok.value
-}
 ```
 
-### `is_err(): this is Err<E>`
+### `isErr(): this is Err<E>`
 
 Says if the value is an `Err`. This is a guard, so you may access the inner `E` at `error`.
 
 ```ts
-Ok(1).is_err() === false
-Err("error").is_err() === true
+Ok(1).isErr() === false
+Err("error").isErr() === true
 
 const err = Err("error")
-if (err.is_err()) {
-  const n: string = err.value
-}
+if (err.isErr())
+  const n: string = err.error
 ```
 
-### `ok_maybe(): Maybe<T>`
+### `okMaybe(): Maybe<T>`
 
-Converts the ok into a [`Maybe`](./maybe.md). This essentially discards any error value.
+Converts the ok into a [`Maybe`](./maybe.md), discarding any error value.
 
 ```ts
-Ok(1).ok_maybe() === Some(1)
-Err("error").ok_maybe() === None
+Ok(1).okMaybe() === Some(1)
+Err("error").okMaybe() === None
 ```
 
-### `ok_undef(): T | undefined`
+### `okUndef(): T | undefined`
 
-Converts the ok into the internal value or `undefined`.
+Converts the ok into the internal value or `undefined`, discarding any error value.
 
 ```ts
-Ok(1).ok_undef() === 1
-Err("error").ok_undef() === undefined
+Ok(1).okUndef() === 1
+Err("error").okUndef() === undefined
 ```
 
-### `ok_null(): T | null`
+### `okNull(): T | null`
 
-Converts the ok into the internal value or `null`.
+Converts the ok into the internal value or `null`, discarding any error value.
 
 ```ts
-Ok(1).ok_null() === 1
-Err("error").ok_null() === null
+Ok(1).okNull() === 1
+Err("error").okNull() === null
 ```
 
-### `err_maybe(): Maybe<E>`
+### `errMaybe(): Maybe<E>`
 
-Converts the error into a [`Maybe`](./maybe.md). This essentially discards any ok value.
+Converts the error into a [`Maybe`](./maybe.md), discarding any ok value.
 
 ```ts
-Ok(1).err_maybe() === None
-Err("error").err_maybe() === Some("error")
+Ok(1).errMaybe() === None
+Err("error").errMaybe() === Some("error")
 ```
 
-### `err_undef(): E | undefined`
+### `errUndef(): E | undefined`
 
-Converts the error into the internal value or `undefined`.
+Converts the error into the internal value or `undefined`, discarding any ok value.
 
 ```ts
-Ok(1).err_undef() === undefined
-Err("error").err_undef() === "error"
+Ok(1).errUndef() === undefined
+Err("error").errUndef() === "error"
 ```
 
-### `err_null(): E | null`
+### `errNull(): E | null`
 
-Converts the error into the internal value or `null`.
+Converts the error into the internal value or `null`, discarding any ok value.
 
 ```ts
-Ok(1).err_null() === null
-Err("error").err_null() === "error"
+Ok(1).errNull() === null
+Err("error").errNull() === "error"
 ```
 
 ### `match<U>(fn: ResultMatch<T, E, U>): U`
@@ -134,26 +132,26 @@ Ok(1).change(number => number + 1) === Ok(2)
 Err("error").change(number => number + 1) === Err("error")
 ```
 
-### `try_change<U>(fn: (value: T) => Result<U, E>): Result<U, E>`
+### `tryChange<U>(fn: (value: T) => Result<U, E>): Result<U, E>`
 
 Changes the internal value with a fallible operation if it is `Ok`, else does nothing.
 
 ```ts
 const func = number => number >= 0 ? Ok(number + 1) : Err("negative number")
-Ok(1).try_change(func) === Ok(2)
-Err("started bad").try_change(func) === Err("started bad")
+Ok(1).tryChange(func) === Ok(2)
+Err("started bad").tryChange(func) === Err("started bad")
 
-Ok(-1).try_change(func) === Err("negative number")
+Ok(-1).tryChange(func) === Err("negative number")
 ```
 
-### `change_err<U>(fn: (err: E) => U): Result<T, U>`
+### `changeErr<U>(fn: (err: E) => U): Result<T, U>`
 
 Changes the error if it is `Err`, else does nothing.
 
 ```ts
 const func = error => `something went wrong: ${error}`
-Ok(1).change_err(func) === Ok(1)
-Err("error").change_err(func) === Err("something went wrong: error")
+Ok(1).changeErr(func) === Ok(1)
+Err("error").changeErr(func) === Err("something went wrong: error")
 ```
 
 
@@ -187,11 +185,11 @@ Err("one error").or(Err("two error")) === Err("one error")
 Ok(1).or(() => Ok(2)) === Ok(1)
 ```
 
-### `xor(other: ProducerOrValue<Result<T, E>>, same_err: ProducerOrValue<E>): Result<T, E>`
+### `xor(other: ProducerOrValue<Result<T, E>>, sameErr: ProducerOrValue<E>): Result<T, E>`
 
 Returns `this` or `other` if exactly one of them is `Ok`, else `Err`.
 
-Both `other` and `same_err` can be a function that returns a value, for lazy execution.
+Both `other` and `sameErr` can be a function that returns a value, for lazy execution.
 
 ```ts
 Ok(1).xor(Ok(2), "both Ok") === Err("both Ok")
@@ -215,17 +213,17 @@ Err("error").default(0) === 0
 Err("error").default(() => 0) === 0
 ```
 
-### `default_err(def_err: ProducerOrValue<E>): E`
+### `defaultErr(defErr: ProducerOrValue<E>): E`
 
-Returns the err value if it is `Err`, else `def_err`.
+Returns the err value if it is `Err`, else `defErr`.
 
-`default_err` can be a function that returns a value, for lazy execution.
+`defaultErr` can be a function that returns a value, for lazy execution.
 
 ```ts
-Ok(1).default_err("Uh oh") === "Uh oh"
-Err("error").default_err("Uh oh") === "error"
+Ok(1).defaultErr("Uh oh") === "Uh oh"
+Err("error").defaultErr("Uh oh") === "error"
 
-Ok(1).default_err(() => "Uh oh") === "Uh oh"
+Ok(1).defaultErr(() => "Uh oh") === "Uh oh"
 ```
 
 ### `expect(message: string): T | never`
@@ -237,28 +235,28 @@ Ok(1).expect("Uh oh") === 1
 Err("error").expect("Uh oh") // throws Error("Uh oh")
 ```
 
-### `expect_err(message: string): E | never`
+### `expectErr(message: string): E | never`
 
 Returns the err value if it is `Err`, otherwise throws an error with `message`. Use this cautiously!
 
 ```ts
-Err("error").expect_err("Uh oh") === "error"
-Ok(1).expect_err("Uh oh") // throws Error("Uh oh")
+Err("error").expectErr("Uh oh") === "error"
+Ok(1).expectErr("Uh oh") // throws Error("Uh oh")
 ```
 
 ### `join<L extends any[]>(...args: ResultTuple<L, E>): ResultJoin<Unshift<T, L>, E>`
 
 Joins `this` and many more `Result`s into a `ResultJoin`, which is detailed more below. Joining allows you to perform computations on many `Result`s that rely on them all being successful. All the `Result`s may be of different types.
 
-### `join_collect_err<L extends any[]>(...args: ResultTuple<L, E>): ResultJoin<Unshift<T, L>, E[]>`
+### `joinCollectErr<L extends any[]>(...args: ResultTuple<L, E>): ResultJoin<Unshift<T, L>, E[]>`
 
 Same as `join`, but collects all errors into an array.
 
 ```ts
-const combine_err = Ok(1).join(Err("one error"), Err("two error"))
+const combineErr = Ok(1).join(Err("one error"), Err("two error"))
   .combine((one, two, three) => one + two + three)
 
-combine_err === Err(["one error", "two error"])
+combineErr === Err(["one error", "two error"])
 ```
 
 
@@ -271,18 +269,18 @@ The type created from joining `Results`s. Has methods to either combine the inte
 Combines the internal `Result`s if they were all `Ok`, else does nothing and returns the `Err` created at the time of join.
 
 ```ts
-const combine_ok = Ok(1).join(Ok(2), Ok(3))
+const combineOk = Ok(1).join(Ok(2), Ok(3))
   .combine((one, two, three) => one + two + three)
 
-combine_ok === Ok(6)
+combineOk === Ok(6)
 
-const combine_err = Ok(1).join(Err("one error"), Err("two error"))
+const combineErr = Ok(1).join(Err("one error"), Err("two error"))
   .combine((one, two, three) => one + two + three)
 
-combine_err === Err("one error")
+combineErr === Err("one error")
 ```
 
-### `try_combine<T>(fn: (...args: L) => Result<T, E>): Result<T, E>`
+### `tryCombine<T>(fn: (...args: L) => Result<T, E>): Result<T, E>`
 
 Combines the internal `Result`s if they were all `Ok` with a fallible computation, else does nothing and returns the `Err` created at the time of join.
 
@@ -294,56 +292,56 @@ const func = (one, two, three) => {
     return one + two + three
 }
 
-const combine_ok = Ok(1).join(Ok(2), Ok(3))
-  .try_combine(func)
+const combineOk = Ok(1).join(Ok(2), Ok(3))
+  .tryCombine(func)
 
-combine_ok === Ok(6)
+combineOk === Ok(6)
 
-const combine_err = Ok(-1).join(Ok(2), Ok(3))
-  .try_combine(func)
+const combineErr = Ok(-1).join(Ok(2), Ok(3))
+  .tryCombine(func)
 
-combine_err === Err("error")
+combineErr === Err("error")
 ```
 
-### `into_result(): Result<L, E>`
+### `intoResult(): Result<L, E>`
 
 Converts the `ResultJoin` into a normal `Result` where the internal value is a tuple.
 
 ```ts
-const combine_ok = Ok(1).join(Ok('a'), Ok(true))
-  .into_result()
+const combineOk = Ok(1).join(Ok('a'), Ok(true))
+  .intoResult()
 
-combine_ok === Ok([1, 'a', true])
+combineOk === Ok([1, 'a', true])
 
-const combine_err = Ok(1).join(Err("error"), Ok(true))
-  .into_result()
+const combineErr = Ok(1).join(Err("error"), Ok(true))
+  .intoResult()
 
-combine_err === Err("error")
+combineErr === Err("error")
 ```
 
 
 ## `Result` static functions
 
-### `Result.from_nillable<T, E>(value: T | null | undefined, err: ProducerOrValue<E>): Result<T, E>`
+### `Result.fromNillable<T, E>(value: T | null | undefined, err: ProducerOrValue<E>): Result<T, E>`
 
 Converts an ordinary javascript value that could be `null | undefined` into a `Result`.
 
 `err` can be a function that returns a value, for lazy execution.
 
 ```ts
-Result.from_nillable(1, "was nillable") === Ok(1)
-Result.from_nillable(null, "was nillable") === Err("was nillable")
-Result.from_nillable(undefined, () => "was nillable") === Err("was nillable")
+Result.fromNillable(1, "was nillable") === Ok(1)
+Result.fromNillable(null, "was nillable") === Err("was nillable")
+Result.fromNillable(undefined, () => "was nillable") === Err("was nillable")
 ```
 
-### `Result.is_result(value: any): value is Result<unknown, unknown>`
+### `Result.isResult(value: any): value is Result<unknown, unknown>`
 
 Checks if a value is a `Result`.
 
 ```ts
-Result.is_result(Ok(1)) === true
-Result.is_result(Err("error")) === true
-Result.is_result('a') === false
+Result.isResult(Ok(1)) === true
+Result.isResult(Err("error")) === true
+Result.isResult('a') === false
 ```
 
 ### `Result.all<T, E>(results: Result<T, E>[]): Result<T[], E>`
@@ -355,7 +353,7 @@ Result.all([Ok(1), Ok(2), Ok(3)]) === Ok([1, 2, 3])
 Result.all([Ok(1), Err("error"), Ok(3)]) === Err("error")
 ```
 
-### `Result.all_collect_err<T, E>(results: Result<T, E>[]): Result<T[], E[]>`
+### `Result.allCollectErr<T, E>(results: Result<T, E>[]): Result<T[], E[]>`
 
 Takes an array of `Result`s and converts it to a `Result` where the internal value is an array. If any value is `Err`, the output is the collected `Err`s.
 
@@ -369,20 +367,20 @@ Result.all([Ok(1), Err("one"), Ok(3), Err("two")]) === Err(["one", "two"])
 A static counterpart to `instance.join`.
 
 ```ts
-const combine_ok = Result.join(Ok(1), Ok(2), Ok(3))
+const combineOk = Result.join(Ok(1), Ok(2), Ok(3))
   .combine((one, two, three) => one + two + three)
 
-combine_ok === Ok(6)
+combineOk === Ok(6)
 
-const combine_err = Result.join(Ok(1), Err("error"), Ok(3))
+const combineErr = Result.join(Ok(1), Err("error"), Ok(3))
   .combine((one, two, three) => one + two + three)
 
-combine_err === Err("error")
+combineErr === Err("error")
 ```
 
-### `Result.join_collect_err<L extends any[], E>(...results: ResultTuple<L, E>): ResultJoin<L, E[]>`
+### `Result.joinCollectErr<L extends any[], E>(...results: ResultTuple<L, E>): ResultJoin<L, E[]>`
 
-A static counterpart to `instance.join_collect_err`.
+A static counterpart to `instance.joinCollectErr`.
 
 ### `Result.filter<T, E>(results: Result<T, E>[]): T[]`
 

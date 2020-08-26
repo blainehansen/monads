@@ -3,9 +3,9 @@
 This type is an alternative to `null | undefined`, but it allows for chaining and joining in a functional style.
 
 ```ts
-import { Maybe, Some, None } from '@ts-std/monads'
+import { Maybe, Some, None } from '@blainehansen/monads'
 
-function require_even(n: number): Maybe<number> {
+function requireEven(n: number): Maybe<number> {
   if (n % 2 === 0)
     return Some(n)
   else
@@ -15,54 +15,53 @@ function require_even(n: number): Maybe<number> {
 
 ## `Maybe<T>` instances
 
-### `is_some(): this is Some<T>`
+### `isSome(): this is Some<T>`
 
 Says if the value is a `Some`. This is a guard, so you may access the inner `T` at `value`.
 
 ```ts
-Some(1).is_some() === true
-None.is_some() === false
+Some(1).isSome() === true
+None.isSome() === false
 
 const some = Some(1)
-if (some.is_some()) {
+if (some.isSome())
   const n: number = some.value
-}
 ```
 
-### `is_none(): this is None`
+### `isNone(): this is None`
 
 Says if the value is `None`. This is a guard.
 
 ```ts
-Some(1).is_none() === false
-None.is_none() === true
+Some(1).isNone() === false
+None.isNone() === true
 ```
 
-### `to_undef(): T | undefined`
+### `toUndef(): T | undefined`
 
 Converts the `Maybe` into the internal value or `undefined`.
 
 ```ts
-Some(1).to_undef() === 1
-None.to_undef() === undefined
+Some(1).toUndef() === 1
+None.toUndef() === undefined
 ```
 
-### `to_null(): T | null`
+### `toNull(): T | null`
 
 Converts the `Maybe` into the internal value or `null`.
 
 ```ts
-Some(1).to_null() === 1
-None.to_null() === null
+Some(1).toNull() === 1
+None.toNull() === null
 ```
 
-### `to_result<E>(err: E): Result<T, E>`
+### `toResult<E>(err: E): Result<T, E>`
 
 Converts the `Maybe` into a [`Result`](./result.md), taking in an error value.
 
 ```ts
-Some(1).to_result("no number") === Ok(5)
-None.to_result("no number") === Err("no number")
+Some(1).toResult("no number") === Ok(5)
+None.toResult("no number") === Err("no number")
 ```
 
 ### `match<U>(fn: MaybeMatch<T, U>): U`
@@ -100,16 +99,16 @@ Some(1).change(number => number + 1) === Some(2)
 None.change(number => number + 1) === None
 ```
 
-### `try_change<U>(fn: (value: T) => Maybe<U>): Maybe<U>`
+### `tryChange<U>(fn: (value: T) => Maybe<U>): Maybe<U>`
 
 Changes the internal value with a fallible operation if it is `Some`, else does nothing.
 
 ```ts
 const func = number => number >= 0 ? Some(number + 1) : None
-Some(1).try_change(func) === Some(2)
-None.try_change(func) === None
+Some(1).tryChange(func) === Some(2)
+None.tryChange(func) === None
 
-Some(-1).try_change(func) === None
+Some(-1).tryChange(func) === None
 ```
 
 ### `and<U>(other: ProducerOrValue<Maybe<U>>): Maybe<U>`
@@ -194,18 +193,18 @@ The type created when joining `Maybe`s. Has methods to either combine the intern
 Combines the internal `Maybe`s if they were all `Some`, else does nothing and returns `None`.
 
 ```ts
-const combine_some = Some(1).join(Some(2), Some(3))
+const combineSome = Some(1).join(Some(2), Some(3))
   .combine((one, two, three) => one + two + three)
 
-combine_some === Some(6)
+combineSome === Some(6)
 
-const combine_none = Some(1).join(None, Some(3))
+const combineNone = Some(1).join(None, Some(3))
   .combine((one, two, three) => one + two + three)
 
-combine_none === None
+combineNone === None
 ```
 
-### `try_combine<T>(fn: (...args: L) => Maybe<T>): Maybe<T>`
+### `tryCombine<T>(fn: (...args: L) => Maybe<T>): Maybe<T>`
 
 Combines the internal `Maybe`s if they were all `Some` with a fallible computation, else does nothing and returns `None`.
 
@@ -217,54 +216,54 @@ const func = (one, two, three) => {
     return one + two + three
 }
 
-const combine_some = Some(1).join(Some(2), Some(3))
-  .try_combine(func)
+const combineSome = Some(1).join(Some(2), Some(3))
+  .tryCombine(func)
 
-combine_some === Some(6)
+combineSome === Some(6)
 
-const combine_none = Some(-1).join(Some(2), Some(3))
-  .try_combine(func)
+const combineNone = Some(-1).join(Some(2), Some(3))
+  .tryCombine(func)
 
-combine_none === None
+combineNone === None
 ```
 
-### `into_maybe(): Maybe<L>`
+### `intoMaybe(): Maybe<L>`
 
 Converts the `MaybeJoin` into a normal `Maybe` where the internal value is a tuple.
 
 ```ts
-const combine_some = Some(1).join(Some('a'), Some(true))
-  .into_maybe()
+const combineSome = Some(1).join(Some('a'), Some(true))
+  .intoMaybe()
 
-combine_some === Some([1, 'a', true])
+combineSome === Some([1, 'a', true])
 
-const combine_none = Some(1).join(None, Some(true))
-  .into_maybe()
+const combineNone = Some(1).join(None, Some(true))
+  .intoMaybe()
 
-combine_none === None
+combineNone === None
 ```
 
 
 ## `Maybe` static functions
 
-### `Maybe.from_nillable<T>(value: T | null | undefined): Maybe<T>`
+### `Maybe.fromNillable<T>(value: T | null | undefined): Maybe<T>`
 
 Converts an ordinary javascript value that could be `null | undefined` into a `Maybe`.
 
 ```ts
-Maybe.from_nillable(1) === Some(1)
-Maybe.from_nillable(null) === None
-Maybe.from_nillable(() => undefined) === None
+Maybe.fromNillable(1) === Some(1)
+Maybe.fromNillable(null) === None
+Maybe.fromNillable(() => undefined) === None
 ```
 
-### `Maybe.is_maybe(value: any): value is Maybe<unknown>`
+### `Maybe.isMaybe(value: any): value is Maybe<unknown>`
 
 Checks if a value is a `Maybe`.
 
 ```ts
-Maybe.is_maybe(Some(1)) === true
-Maybe.is_maybe(None) === true
-Maybe.is_maybe('a') === false
+Maybe.isMaybe(Some(1)) === true
+Maybe.isMaybe(None) === true
+Maybe.isMaybe('a') === false
 ```
 
 ### `Maybe.all<T>(maybes: Maybe<T>[]): Maybe<T[]>`
@@ -289,15 +288,15 @@ Maybe.filter([Some(1), None, Some(2), Some(3), None]) === [1, 2, 3]
 A static counterpart to `instance.join`.
 
 ```ts
-const combine_some = Maybe.join(Some(1), Some(2), Some(3))
+const combineSome = Maybe.join(Some(1), Some(2), Some(3))
   .combine((one, two, three) => one + two + three)
 
-combine_some === Some(6)
+combineSome === Some(6)
 
-const combine_none = Maybe.join(Some(1), None, Some(3))
+const combineNone = Maybe.join(Some(1), None, Some(3))
   .combine((one, two, three) => one + two + three)
 
-combine_none === None
+combineNone === None
 ```
 
 ### `Maybe.attempt<T>(fn: () => T): Maybe<T>`

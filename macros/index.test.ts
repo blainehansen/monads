@@ -27,4 +27,25 @@ describe('macros', () => it('work', () => {
 	}
 	expect(complexMaybe(Some(1), Some(1))).eql(Some(false))
 	expect(complexMaybe(None, Some(2))).eql(None)
+
+
+	function addResults(a: Result<number>, b: Result<number>) {
+	  // these macros will expand to code equivalent to this:
+	  // if (a.isErr()) return Err(a.error)
+	  // if (b.isErr()) return Err(b.error)
+	  // const sum = a.value + b.value
+	  const sum = ok!!(a) + ok!!(b)
+	  return Ok(sum)
+	}
+	expect(addResults(Ok(1), Ok(1))).eql(Ok(2))
+	expect(addResults(Ok(1), Err('boo'))).eql(Err('boo'))
+
+	function printDollarMaybes(...maybes: Maybe<number>[]) {
+	  // the `ok` and `some` macros
+	  // can be used on arbitrarily complex expressions
+	  const amounts = some!!(Maybe.all(maybes)).map(a => `$${a.toFixed(2)}`)
+	  return amounts.join(', ')
+	}
+	expect(printDollarMaybes(Some(4.3), Some(9))).eql('$4.30, $9.00')
+	expect(printDollarMaybes(Some(4.3), None, Some(9))).eql(None)
 }))

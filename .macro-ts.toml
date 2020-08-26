@@ -5,10 +5,3 @@ location = 'lib'
 entry = '**/*.ts'
 exclude = "**/*.test.ts"
 environment = 'anywhere'
-
-[[packages]]
-location = 'macros'
-entry = '**/*.ts'
-exclude = "**/*.test.ts"
-environment = 'anywhere'
-
