@@ -450,12 +450,12 @@ describe('transmutation', () => {
 		const g: Result<boolean, string> = e
 	})
 
-	// it('overall', () => {
-	// 	function f(r: Result<number>): Result<boolean> {
-	// 		if (r.isErr()) return r
-	// 		return Ok(r.value !== 0)
-	// 	}
-	// })
+	it('overall', () => {
+		function f(r: Result<number>): Result<boolean> {
+			if (r.isErr()) return Err(r.error)
+			return Ok(r.value !== 0)
+		}
+	})
 })
 
 describe('Result dangerous any casts', () => {

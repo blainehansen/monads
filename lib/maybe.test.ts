@@ -375,3 +375,19 @@ describe('tap', () => it('works', () => {
 		}
 	}
 }))
+
+
+describe('transmutation', () => {
+	it('convertible to other', () => {
+		const a = None
+		const b: Maybe<number> = a
+		const c: Maybe<string> = a
+	})
+
+	it('overall', () => {
+		function f(m: Maybe<number>): Maybe<boolean> {
+			if (m.isNone()) return None
+			return Some(m.value !== 0)
+		}
+	})
+})

@@ -1,8 +1,14 @@
-# macros = '.macros.ts'
+macros = 'macros/.macros.test.ts'
 
 [[packages]]
 location = 'lib'
-entry = 'index.ts'
+entry = '**/*.ts'
+exclude = "**/*.test.ts"
+environment = 'anywhere'
+
+[[packages]]
+location = 'macros'
+entry = '**/*.ts'
 exclude = "**/*.test.ts"
 environment = 'anywhere'
 

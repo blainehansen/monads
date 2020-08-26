@@ -13,7 +13,7 @@ export type MaybeMatch<T, U> = {
 
 export interface MaybeLike<T> {
 	isSome(): this is MaybeSome<T>
-	isNone(): this is MaybeNone<T>
+	isNone(): this is MaybeNone<any>
 	toUndef(): T | undefined
 	toNull(): T | null
 	toResult<E>(err: E): Result<T, E>
@@ -46,7 +46,7 @@ class MaybeSome<T> implements MaybeLike<T> {
 	isSome(): this is MaybeSome<T> {
 		return true
 	}
-	isNone(): this is MaybeNone<T> {
+	isNone(): this is MaybeNone<any> {
 		return false
 	}
 	toUndef(): T | undefined {
@@ -122,7 +122,7 @@ class MaybeNone<T> implements MaybeLike<T> {
 	isSome(): this is MaybeSome<T> {
 		return false
 	}
-	isNone(): this is MaybeNone<T> {
+	isNone(): this is MaybeNone<any> {
 		return true
 	}
 	toUndef(): T | undefined {

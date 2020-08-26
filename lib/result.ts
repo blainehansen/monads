@@ -12,8 +12,8 @@ export type ResultMatch<T, E, U> = {
 }
 
 export interface ResultLike<T, E> {
-	isOk(): this is ResultOk<T, unknown>,
-	isErr(): this is ResultErr<unknown, E>,
+	isOk(): this is ResultOk<T, any>,
+	isErr(): this is ResultErr<any, E>,
 	okMaybe(): Maybe<T>,
 	okUndef(): T | undefined,
 	okNull(): T | null,
