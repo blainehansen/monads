@@ -1,50 +1,50 @@
 {
-  "name": "@blainehansen/monads",
-  "version": "1.0.1",
-  "description": "`Result` and `Maybe` types and accompanying `macro-ts` helper macros that allow a safe, functional way of dealing with errors and nullable values.",
-  "main": "dist/lib/index.js",
-  "typings": "dist/lib/index.d.ts",
-  "files": [
-    "dist"
-  ],
-  "keywords": [
-    "monad",
-    "rust",
-    "functional",
-    "result",
-    "maybe",
-    "option",
-    "macro",
-    "macro-ts",
-    "question",
-    "operator",
-    "try",
-    "exception"
-  ],
-  "scripts": {
-    "dev": "macro-ts --dev run lib/index.ts",
-    "test": "mocha -r @blainehansen/macro-ts/register lib/**/*.test.ts macros/**/*.test.ts",
-    "check": "macro-ts --dev check",
-    "build": "./build.sh",
-    "preversion": "npm test && npm run build",
-    "postversion": "git push origin master && git push origin master --tags && npm publish --access public"
-  },
-  "author": {
-    "name": "Blaine Hansen",
-    "email": "faichenshing@gmail.com",
-    "url": "http://blainehansen.me/"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/blainehansen/monads.git"
-  },
-  "license": "MIT",
-  "devDependencies": {
-    "@blainehansen/macro-ts": "^0.1.2",
-    "@types/chai": "^4.2.12",
-    "@types/mocha": "^8.0.3",
-    "chai": "^4.2.0",
-    "mocha": "^8.1.1",
-    "typescript": "^4.0.2"
-  }
+	"name": "@blainehansen/monads",
+	"version": "1.0.1",
+	"description": "`Result` and `Maybe` types and accompanying `macro-ts` helper macros that allow a safe, functional way of dealing with errors and nullable values.",
+	"main": "./dist/lib/index.js",
+	"typings": "./dist/lib/index.d.ts",
+	"files": [
+		"dist"
+	],
+	"keywords": [
+		"monad",
+		"rust",
+		"functional",
+		"result",
+		"maybe",
+		"option",
+		"macro",
+		"macro-ts",
+		"question",
+		"operator",
+		"try",
+		"exception"
+	],
+	"scripts": {
+		"dev": "macro-ts --dev run lib/index.ts",
+		"test": "mocha -r @blainehansen/macro-ts/register lib/**/*.test.ts macros/**/*.test.ts",
+		"check": "macro-ts --dev check",
+		"build": "./build.sh",
+		"preversion": "npm test && npm run build",
+		"postversion": "git push origin master && git push origin master --tags && npm publish --access public"
+	},
+	"author": {
+		"name": "Blaine Hansen",
+		"email": "faichenshing@gmail.com",
+		"url": "http://blainehansen.me/"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/blainehansen/monads.git"
+	},
+	"license": "MIT",
+	"devDependencies": {
+		"@blainehansen/macro-ts": "^0.1.5",
+		"@types/chai": "^4.2.12",
+		"@types/mocha": "^8.0.3",
+		"chai": "^4.2.0",
+		"mocha": "^8.1.1",
+		"typescript": "^4.0.2"
+	}
 }

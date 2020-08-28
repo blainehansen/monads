@@ -4,4 +4,4 @@ macros = 'macros/.macros.test.ts'
 location = 'lib'
 entry = '**/*.ts'
 exclude = "**/*.test.ts"
-environment = 'anywhere'
+environment = 'node'

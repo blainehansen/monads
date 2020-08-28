@@ -44,8 +44,8 @@ describe('macros', () => it('work', () => {
 	  // the `ok` and `some` macros
 	  // can be used on arbitrarily complex expressions
 	  const amounts = some!!(Maybe.all(maybes)).map(a => `$${a.toFixed(2)}`)
-	  return amounts.join(', ')
+	  return Some(amounts.join(', '))
 	}
-	expect(printDollarMaybes(Some(4.3), Some(9))).eql('$4.30, $9.00')
+	expect(printDollarMaybes(Some(4.3), Some(9))).eql(Some('$4.30, $9.00'))
 	expect(printDollarMaybes(Some(4.3), None, Some(9))).eql(None)
 }))
